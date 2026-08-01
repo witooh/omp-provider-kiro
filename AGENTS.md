@@ -4,8 +4,9 @@
 
 ## Project Overview
 
-omp extension that registers the Kiro API (AWS CodeWhisperer/Q) as a provider: 15 models with
-multi-provider authentication (AWS Builder ID, IAM Identity Center, Google, GitHub).
+omp extension that registers the Kiro API (AWS CodeWhisperer/Q) as a provider with multi-provider
+authentication (AWS Builder ID, IAM Identity Center, Google, GitHub). Models come from the
+account's live management catalog after login; a 15-model bootstrap list covers the pre-login menu.
 
 Ported from the pi extension `@witooh/pi-provider-kiro`. Keep the delta thin — prefer extending an
 existing module over reshaping the layout, so future upstream fixes stay easy to carry over.
@@ -86,8 +87,10 @@ omp-provider-kiro/
 - **Credential cascade**: Kiro IDE token → kiro-cli social token → kiro-cli IDC token →
   OAuth device-code flow.
 - **Auth methods**: `idc` (Builder ID / IAM Identity Center, refresh via SSO OIDC, refresh token
-  format `refreshToken|clientId|clientSecret|idc`) and `desktop` (Google/GitHub, refresh via
-  `prod.{region}.auth.desktop.kiro.dev`, format `refreshToken|desktop`).
+  format `refreshToken|clientId|clientSecret|idc|region`) and `desktop` (Google/GitHub, refresh via
+  `prod.{region}.auth.desktop.kiro.dev`, format `refreshToken|desktop|region`). Both built by
+  `packKiroRefresh()`; pre-region strings (no trailing region segment) parse with a us-east-1
+  fallback.
 
 ## Development
 
