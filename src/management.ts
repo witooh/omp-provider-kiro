@@ -7,6 +7,7 @@ import { getKiroEndpoints } from "./endpoints.js";
 
 const LIST_PROFILES_PATH = "List-Available-Profiles";
 const LIST_MODELS_PATH = "List-Available-Models";
+const GET_USAGE_LIMITS_PATH = "Get-Usage-Limits";
 
 export interface KiroManagementAuth {
   accessToken: string;
@@ -180,4 +181,16 @@ export async function fetchKiroModelCatalog(
 ): Promise<KiroListAvailableModelsResponse> {
   const profileArn = await resolveKiroProfileArn(auth, providedProfileArn);
   return listAvailableModels(auth, profileArn);
+}
+
+export async function getUsageLimits<TResponse>(
+  auth: KiroManagementAuth,
+  profileArn: string | undefined,
+): Promise<TResponse> {
+  return requestManagement<TResponse>(auth, "GetUsageLimits", GET_USAGE_LIMITS_PATH, "GET", {
+    origin: "KIRO_CLI",
+    resourceType: "CREDIT",
+    isEmailRequired: false,
+    profileArn,
+  });
 }

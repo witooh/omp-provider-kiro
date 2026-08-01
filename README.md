@@ -67,10 +67,14 @@ list through the provider's `modifyModels` hook.
 ```text
 /model claude-sonnet-4-6      # or /model auto
 /reasoning high
+/kiro-usage                   # plan, credits used, reset window
 ```
 
 `/reasoning` levels come from each model's declared `thinking.efforts`; the selected effort is
 translated into Kiro's structured `reasoning` / `output_config` request field.
+
+`/kiro-usage` reads `Get-Usage-Limits` from the management API. `omp usage` cannot show Kiro — see
+below.
 
 ## Differences from the pi extension
 
@@ -80,7 +84,7 @@ omp's `registerProvider` contract is narrower than pi's, so three hooks were dro
 |---|---|
 | `oauth.getCliCredentials` | Not in omp's contract. No loss — `loginKiro`/`refreshKiroToken` read the `kiro-cli` DB themselves. |
 | `refreshModels` (host-driven catalog refresh) | Not in `ProviderConfigInput`. The catalog is refreshed from the login, token-refresh, and stream paths instead. |
-| `oauth.fetchUsage` | omp has no extension usage hook, so `/usage` does not show Kiro quota. `src/usage.ts` was removed rather than left dead. |
+| `oauth.fetchUsage` | No equivalent hook: omp resolves usage providers from a private table in `pi-ai` (`auth-storage.ts` `DEFAULT_USAGE_PROVIDERS`) and `omp usage` never loads extensions. Kiro quota is exposed through the `/kiro-usage` command instead, so `omp usage --provider kiro` still reports "no usage data". |
 
 ## Retry behavior
 

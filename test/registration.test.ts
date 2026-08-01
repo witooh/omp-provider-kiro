@@ -6,7 +6,12 @@ import { vi } from "./vi.js";
 
 const mockPi = () => {
   const registerProvider = vi.fn();
-  return { pi: { registerProvider, on: vi.fn() } as unknown as ExtensionAPI, registerProvider };
+  const registerCommand = vi.fn();
+  return {
+    pi: { registerProvider, registerCommand, on: vi.fn() } as unknown as ExtensionAPI,
+    registerProvider,
+    registerCommand,
+  };
 };
 
 describe("Feature 1: Extension Registration", () => {
@@ -29,6 +34,19 @@ describe("Feature 1: Extension Registration", () => {
 
     expect(registerProvider).toHaveBeenCalledTimes(1);
     expect(registerProvider.mock.calls[0][0]).toBe("kiro");
+  });
+
+  it("registers the kiro-usage command", async () => {
+    // Dynamic like its siblings: the module reads the management cache on load,
+    // which beforeEach must delete first.
+    const mod = await import("../src/index.js");
+    const { pi, registerCommand } = mockPi();
+
+    mod.default(pi);
+
+    expect(registerCommand).toHaveBeenCalledTimes(1);
+    expect(registerCommand.mock.calls[0][0]).toBe("kiro-usage");
+    expect(typeof registerCommand.mock.calls[0][1].handler).toBe("function");
   });
 
   it("registers 15 models", async () => {

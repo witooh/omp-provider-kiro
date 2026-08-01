@@ -46,7 +46,13 @@ omp-provider-kiro/
 - `registerProvider` returns early when `models` is non-empty, so `fetchDynamicModels` would never
   run. We ship the bootstrap catalog in `models` and project the live catalog through
   `oauth.modifyModels`.
-- `oauth.getCliCredentials` and `oauth.fetchUsage` do not exist in omp — do not re-add them.
+- `oauth.getCliCredentials` and `oauth.fetchUsage` do not exist in omp — do not re-add them to the
+  provider config. Usage lives in `src/usage.ts` behind the `/kiro-usage` command: `pi-ai` resolves
+  usage providers from the module-private `DEFAULT_USAGE_PROVIDERS` map, and `omp usage` (`cli/usage-cli.ts`)
+  builds its `AuthStorage` without loading extensions, so no plugin can feed that view.
+- `Get-Usage-Limits` rejects a request with no `profileArn` (400 `Invalid profileArn`), so
+  `fetchKiroUsage` always resolves one first. The stored credential holds only
+  `access`/`refresh`/`expires`/`authorizedAt` — region comes from the packed refresh string.
 - `api: "kiro-api"` is a custom API. `registerProvider` forwards `streamSimple` to pi-ai's
   `registerCustomApi`, and `stream.ts` dispatches on `model.api` before the built-ins.
 

@@ -1,6 +1,6 @@
 {
   "name": "@witooh/omp-provider-kiro",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "omp extension for the Kiro API (AWS CodeWhisperer/Q) — Claude/DeepSeek/GLM/Qwen/MiniMax models with OAuth authentication",
   "type": "module",
   "license": "MIT",
