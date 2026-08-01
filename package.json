@@ -1,0 +1,53 @@
+{
+  "name": "@witooh/omp-provider-kiro",
+  "version": "0.1.0",
+  "description": "omp extension for the Kiro API (AWS CodeWhisperer/Q) — Claude/DeepSeek/GLM/Qwen/MiniMax models with OAuth authentication",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/witooh/omp-provider-kiro.git"
+  },
+  "keywords": [
+    "omp-package",
+    "omp",
+    "kiro",
+    "aws",
+    "codewhisperer",
+    "ai",
+    "provider"
+  ],
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --platform=node --format=esm --outfile=dist/index.js --external:@oh-my-pi/pi-ai --external:@oh-my-pi/pi-coding-agent --external:@oh-my-pi/pi-tui",
+    "check": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "test": "HOME=$(mktemp -d) bun test",
+    "test:watch": "HOME=$(mktemp -d) bun test --watch",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run check && npm run build"
+  },
+  "omp": {
+    "extensions": [
+      "./dist/index.js"
+    ]
+  },
+  "dependencies": {
+    "@smithy/core": "^3.24.5",
+    "esbuild": "^0.25.0",
+    "js-tiktoken": "^1.0.21"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.2",
+    "@oh-my-pi/pi-ai": "17.2.2",
+    "@oh-my-pi/pi-coding-agent": "17.2.2",
+    "@oh-my-pi/pi-tui": "17.2.2",
+    "@types/bun": "^1.3.14",
+    "typescript": "^5.7.0"
+  }
+}
